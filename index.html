@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://js.stripe.com/v3"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      $(document).ready(function() {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const email = params.get('email');
+        
+        $.ajax({
+          url: '/wordpress/stripe-registration/api/create-stripe-customer.php',
+          type: 'POST',
+          data: {
+            name: name,
+            email: email
+          },
+          success: function(res) {
+            const customerId = res;
+
+            var stripe = Stripe('pk_test_51MPGQtKYbFmGi644TAwgphUxvUVn0jPDtFT87pBnBHMKIiGxotjeWIAs3il4x00JHiYGOLrm72vgQfnbQDRSA9I10015wqlkIk');
+            var elements = stripe.elements();
+            var card = elements.create('card', {
+              style: {
+                base: {
+                  color: '#32325d',
+                  fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                  fontSize: '16px',
+                  '::placeholder': {
+                    color: '#aab7c4'
+                  }
+                },
+                invalid: {
+                  color: '#fa755a',
+                  iconColor: '#fa755a'
+                }
+              }
+            });
+            card.mount('#card-element');
+
+            $("#customer-id").text(customerId);
+            // alert(`${customerId} successfully created.`);
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+          }
+        })
+      });
+    </script>
+  </head>
+  
+  <body>
+    <div>
+      <p>Customer ID: <span id="customer-id"></span></p>
+    </div>
+    <div style="max-width: 1200px; margin-left: auto; margin-right: auto;">
+      <div class="border rounded-lg p-6">
+        <form id="payment-id">
+          <div id="card-element"></div>
+          <button id="submit">Submit</button>
+          <div id="error-message"> </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

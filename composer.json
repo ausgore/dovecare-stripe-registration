@@ -1,0 +1,17 @@
+{
+    "name": "octopus8/stripe-registration",
+    "require": {
+        "stripe/stripe-php": "^16.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Octopus8\\StripeRegistration\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "glenn",
+            "email": "70140106+ausgore@users.noreply.github.com"
+        }
+    ]
+}
